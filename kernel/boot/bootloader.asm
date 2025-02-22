@@ -26,11 +26,25 @@ start:
     mov si, loading_msg
     call print_string
 
+    ; Перенос строки после сообщения о загрузке
+    mov ah, 0x0E
+    mov al, 0x0D  ; Carriage Return
+    int 0x10
+    mov al, 0x0A  ; Line Feed
+    int 0x10
+
     ; Запрос логина
     mov si, username_prompt
     call print_string
     mov di, username
     call get_input
+
+    ; Перенос строки после ввода логина
+    mov ah, 0x0E
+    mov al, 0x0D  ; Carriage Return
+    int 0x10
+    mov al, 0x0A  ; Line Feed
+    int 0x10
 
     ; Запрос пароля
     mov si, password_prompt
@@ -47,6 +61,13 @@ start:
     jmp $
 
 auth_failed:
+    ; Перенос строки перед сообщением об ошибке
+    mov ah, 0x0E
+    mov al, 0x0D  ; Carriage Return
+    int 0x10
+    mov al, 0x0A  ; Line Feed
+    int 0x10
+
     mov si, auth_failed_msg
     call print_string
     jmp $
@@ -159,5 +180,6 @@ correct_password db "root", 0
 
 ; =============================
 ; Завершение загрузочного сектора
+
 times 510 - ($ - $$) db 0
 dw 0xAA55
